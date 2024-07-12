@@ -5,11 +5,6 @@ List<Map<String, Object?>> $data = [
     "name": "An eisai ena asteri",
   },
   {
-    "id": 1,
-    "path": "musics/zor_bolib",
-    "name": "Zor_bolib",
-  },
-  {
     "id": 2,
     "path": "musics/Atrofimda.mp3",
     "name": "Atrofimda",
@@ -86,7 +81,7 @@ List<Map<String, Object?>> $data = [
   },
   {
     "id": 17,
-    "path": "musics/Osmon",
+    "path": "musics/Osmon.mp3",
     "name": "Osmon",
   },
   {
@@ -183,5 +178,10 @@ List<Map<String, Object?>> $data = [
     "id": 36,
     "path": "musics/Zor Yurak.mp3",
     "name": "Zor Yurak",
+  },
+  {
+    "id": 1,
+    "path": "musics/zor_bolib.mp3",
+    "name": "Zor_bolib",
   },
 ];

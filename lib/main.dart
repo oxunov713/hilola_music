@@ -12,3 +12,8 @@ void main() => runApp(
         child: const App(),
       ),
     );
+//TODO sqflite or sharedpref bn musiqlarani durationini,qaysi musiqani eshitayotganini va qayerga kelganini eslab qolishi kerak
+//TODO reklama banneri qoyish kerak yani zametka
+//TODO imagelar shuffle xolatda keladi
+//TODO musiqani shuffle qilgan xolda eshitishi kerak
+//TODO kodni optimallashtirish,soddalashtirish,

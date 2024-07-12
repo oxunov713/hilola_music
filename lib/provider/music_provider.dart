@@ -1,6 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-
 import '../database/music_data.dart';
 import '../model/music_model.dart';
 
@@ -9,6 +8,7 @@ class ProviderMusic extends ChangeNotifier {
       $data.map((json) => MusicModel.fromJson(json)).toList();
 
   final player = AudioPlayer();
+  final player2 = AudioPlayer();
 
   MusicModel? currentMusic;
   String? currentMusicName;
@@ -17,25 +17,50 @@ class ProviderMusic extends ChangeNotifier {
   bool isPlaying = false;
   int n = 0;
 
-  String? getMusicName(int a) {
-    String musicName = musicDatabase[a].name!;
+  late Future<void> preloadingFuture;
 
-    return musicName;
+  ProviderMusic() {
+    preloadingFuture = _preloadDurations();
   }
 
-  void listTileMusic(int index) {
+  Future<void> _preloadDurations() async {
+    for (var music in musicDatabase) {
+      final player2 = AudioPlayer();
+      await player2.setSource(AssetSource(music.path));
+      var duration = await player2.getDuration();
+      music.duration = duration ?? Duration.zero;
+      player2.dispose();
+    }
+    notifyListeners();
+  }
+
+  String? getMusicName(int a) {
+    return musicDatabase[a].name;
+  }
+
+  void listTileMusic(int index) async {
+    _preloadDurations();
     if (isPlaying && musicDatabase[index].id == musicDatabase[n].id) {
-      player.pause();
+      await player.pause();
       isPlaying = false;
     } else {
-      player.play(AssetSource(musicDatabase[index].path!));
+      await player.play(AssetSource(musicDatabase[index].path));
       isPlaying = true;
+      n = index;
+
+      maxDuration = await player.getDuration();
     }
-    n = index;
-    player.setSourceAsset(musicDatabase[n].path!);
-    player.onDurationChanged.listen((Duration duration) {
-      maxDuration = duration;
-    });
+    currentMusicName = musicDatabase[n].name;
+    notifyListeners();
+  }
+
+  void pausePlay() {
+    isPlaying = !isPlaying;
+    notifyListeners();
+  }
+
+  Duration getDuration(int a) {
+    return musicDatabase[a].duration ?? Duration.zero;
   }
 
   @override
