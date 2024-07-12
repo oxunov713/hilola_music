@@ -1,0 +1,38 @@
+<svg width="24" height="23" viewBox="0 0 24 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_i_0_18)">
+<path d="M5.38797 13.0356C4.38322 12.4092 4.38323 10.9463 5.38797 10.3198L15.7658 3.84887C16.8317 3.18423 18.2127 3.95064 18.2127 5.20679L18.2127 18.1487C18.2127 19.4048 16.8317 20.1712 15.7658 19.5066L5.38797 13.0356Z" fill="url(#paint0_linear_0_18)"/>
+</g>
+<g filter="url(#filter1_i_0_18)">
+<rect x="3.21021" y="19.2787" width="2.4004" height="16.0027" rx="1.2002" transform="rotate(-180 3.21021 19.2787)" fill="url(#paint1_linear_0_18)"/>
+</g>
+<defs>
+<filter id="filter0_i_0_18" x="3.83439" y="3.60394" width="14.3783" height="16.1476" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="-0.800135"/>
+<feGaussianBlur stdDeviation="0.400067"/>
+<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0"/>
+<feBlend mode="normal" in2="shape" result="effect1_innerShadow_0_18"/>
+</filter>
+<filter id="filter1_i_0_18" x="0.00967973" y="3.276" width="3.20053" height="16.0027" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="-0.800135"/>
+<feGaussianBlur stdDeviation="0.400067"/>
+<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0"/>
+<feBlend mode="normal" in2="shape" result="effect1_innerShadow_0_18"/>
+</filter>
+<linearGradient id="paint0_linear_0_18" x1="16.8125" y1="19.6791" x2="16.8125" y2="4.47652" gradientUnits="userSpaceOnUse">
+<stop stop-color="#77B0D4"/>
+<stop offset="1" stop-color="#8EC0DD"/>
+</linearGradient>
+<linearGradient id="paint1_linear_0_18" x1="4.41041" y1="19.2787" x2="4.41041" y2="35.2814" gradientUnits="userSpaceOnUse">
+<stop stop-color="#77B0D4"/>
+<stop offset="1" stop-color="#9ECAE3"/>
+</linearGradient>
+</defs>
+</svg>
