@@ -1,7 +1,7 @@
 List<Map<String, Object?>> $data = [
   {
     "id": 0,
-    "path": "musics/An eisai ena asteri.mp3",
+    "path": "musics/anes.mp3",
     "name": "An eisai ena asteri",
   },
   {
@@ -185,3 +185,4 @@ List<Map<String, Object?>> $data = [
     "name": "Zor_bolib",
   },
 ];
+const String $name = "Hilola G'ayratova";

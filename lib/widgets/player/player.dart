@@ -1,126 +1,145 @@
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:hilola_gayratova/styles/app_color.dart';
 import 'package:provider/provider.dart';
 
+import '../../database/music_data.dart';
 import '../../provider/music_provider.dart';
+import '../../styles/app_color.dart';
+import '../../styles/app_icon.dart';
 
-class Player extends StatefulWidget {
+class Player extends StatelessWidget {
   const Player({super.key});
-
-  @override
-  State<Player> createState() => _PlayerState();
-}
-
-class _PlayerState extends State<Player> {
-  late ProviderMusic _providerMusicRead;
-  late ProviderMusic _providerMusicWatch;
-
-  @override
-  void didChangeDependencies() {
-    _providerMusicRead = context.read<ProviderMusic>();
-    _providerMusicWatch = context.watch<ProviderMusic>();
-    super.didChangeDependencies();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xe670acd3),
-      body: Column(
-        children: [
-          SizedBox(
-            height: 500,
+      backgroundColor: AppColors.shade,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(AppIcon.matBack),
+        ),
+        actions: [
+          PopupMenuButton(
+            iconSize: 25,
+            itemBuilder: (context) => <PopupMenuEntry>[],
           ),
-          Column(
-            children: [
-              Center(
-                child: Padding(
+        ],
+      ),
+      body: Consumer<ProviderMusic>(
+        builder: (context, provider, _) {
+          return Padding(
+            padding: const EdgeInsets.only(
+              left: 30,
+              right: 30,
+            ),
+            child: ListView(
+              children: [
+                const SizedBox(height: 60),
+                // Asset image
+                Padding(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
-                  child: Text(
-                    "${_providerMusicWatch?.currentMusicName}",
-                    style: const TextStyle(
-                      fontSize: 23,
-                      fontFamily: "Exo",
-                      overflow: TextOverflow.ellipsis,
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+                  child: SizedBox(
+                    height: 370,
+                    child: Image(
+                      image: AssetImage(
+                        provider.currentMusicImagePath ?? AppIcon.avatar,
+                      ),
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: StreamBuilder<Duration>(
-                  stream: _providerMusicWatch?.player.onPositionChanged,
+                const SizedBox(height: 60),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      provider.currentMusicName ?? $name,
+                      style:
+                          Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      $name,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: AppColors.borderSinger,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 25),
+                StreamBuilder<Duration>(
+                  stream: provider.player.positionStream,
                   builder: (context, snapshot) {
+                    final position = snapshot.data ?? Duration.zero;
                     return ProgressBar(
                       barHeight: 5,
                       barCapShape: BarCapShape.round,
                       timeLabelPadding: 7,
-                      baseBarColor: AppColors.progressbarback,
+                      baseBarColor: AppColors.progressBarBack,
                       progressBarColor: AppColors.appBarText,
                       thumbColor: AppColors.appBarText,
                       thumbRadius: 10,
                       thumbGlowRadius: 0,
-                      progress: snapshot.data ?? Duration.zero,
-                      total: _providerMusicWatch?.maxDuration ?? Duration.zero,
+                      progress: position,
+                      total: provider.currentMusicDuration ?? Duration.zero,
                       onSeek: (duration) {
-                        _providerMusicWatch?.player.seek(duration);
+                        provider.player.seek(duration);
                       },
                     );
                   },
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  InkWell(
-                    onTap: () {},
-                    splashColor: Colors.transparent,
-                    child: SvgPicture.asset(
-                      "assets/icons/back.svg",
-                      height: 30,
+
+                const SizedBox(height: 15),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    IconButton(
+                      onPressed: () => provider.toggleShuffle(),
+                      icon: const Icon(AppIcon.matShuffle),
+                      color: provider.isShuffle
+                          ? AppColors.deepPurple
+                          : AppColors.white1,
                     ),
-                  ),
-                  _providerMusicWatch!.isPlaying
-                      ? IconButton(
-                          icon: const Icon(
-                            CupertinoIcons.pause,
-                            size: 40,
-                            color: AppColors.shade,
-                          ),
-                          onPressed: () {
-                            _providerMusicRead?.player.pause();
-                            _providerMusicRead?.pausePlay();
-                          },
-                        )
-                      : IconButton(
-                          icon: const Icon(
-                            CupertinoIcons.play,
-                            size: 40,
-                            color: AppColors.shade,
-                          ),
-                          onPressed: () {
-                            _providerMusicRead?.player.resume();
-                            _providerMusicRead?.pausePlay();
-                          },
-                        ),
-                  InkWell(
-                    onTap: () {},
-                    splashColor: Colors.transparent,
-                    child: SvgPicture.asset(
-                      "assets/icons/next.svg",
-                      height: 30,
+                    IconButton(
+                      onPressed: () => provider.playPrevious(),
+                      icon: const Icon(
+                        AppIcon.matPrevious,
+                        size: 45,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-            ],
-          ),
-        ],
+                    FilledButton(
+                      style: const ButtonStyle(
+                          backgroundColor:
+                              WidgetStatePropertyAll(AppColors.deepPurple)),
+                      onPressed: () {
+                        provider.pausePlay();
+                      },
+                      child: Icon(
+                        provider.isPlaying ? AppIcon.matPause : AppIcon.matPlay,
+                        color: AppColors.white1,
+                        size: 45,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => provider.playNext(),
+                      icon: const Icon(
+                        AppIcon.matNext,
+                        size: 45,
+                      ),
+                    ),
+                    const SizedBox(width: 30),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

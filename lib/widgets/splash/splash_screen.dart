@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hilola_gayratova/database/music_data.dart';
 import 'package:provider/provider.dart';
-import 'package:hilola_gayratova/provider/music_provider.dart';
-import 'package:lottie/lottie.dart';
-
+import '../../provider/music_provider.dart';
+import '../../styles/app_color.dart';
+import '../../styles/app_icon.dart';
 import '../home/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -13,17 +14,15 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  late ProviderMusic providerMusic;
-
   @override
   void initState() {
     super.initState();
-    providerMusic = Provider.of<ProviderMusic>(context, listen: false);
     _navigateToHome();
   }
 
   Future<void> _navigateToHome() async {
-    await providerMusic.preloadingFuture;
+    final providerMusic = Provider.of<ProviderMusic>(context, listen: false);
+    await providerMusic.preloadDurations();
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const HomeScreen()),
@@ -35,22 +34,26 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(AppIcon.avatar),
+            fit: BoxFit.cover,
+          ),
           gradient: LinearGradient(
-            colors: [Colors.blue, Colors.lightBlueAccent],
+            colors: [AppColors.blue, AppColors.blueAcc],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
         ),
-        child: Center(
+        child: const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                'Hilola G\'ayratova',
+              Text(
+                $name,
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: AppColors.white,
                 ),
               ),
             ],
