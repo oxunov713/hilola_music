@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:hilola_gayratova/database/music_data.dart';
 import 'package:provider/provider.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../../styles/app_color.dart';
+import '../../database/music_data.dart';
 import '../../provider/music_provider.dart';
 import '../../styles/app_icon.dart';
 import '../player/player.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -89,10 +89,10 @@ class HomeScreen extends StatelessWidget {
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 8),
                                       child: Text(
-                                        provider.getMusicName(index) ??
-                                            'Music Name',
+                                        provider.getMusicName(index) ?? $name,
                                         style: const TextStyle(
-                                            color: AppColors.black),
+                                          color: AppColors.black,
+                                        ),
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
@@ -123,92 +123,98 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   // Bottom Player
-                  if (provider.currentMusic != null)
-                    InkWell(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const Player()),
-                      ),
-                      child: Column(
-                        children: [
-                          Center(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 8.0,
-                                horizontal: 15,
-                              ),
-                              child: Text(
-                                provider.currentMusic!.name,
-                                style: const TextStyle(
-                                  fontSize: 23,
-                                  fontFamily: "Exo",
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ),
+                  (provider.currentIndex >= 0 &&
+                          provider.musicDatabase.isNotEmpty)
+                      ? InkWell(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Player()),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: StreamBuilder<Duration>(
-                              stream: provider.player.positionStream,
-                              builder: (context, snapshot) {
-                                final position = snapshot.data ?? Duration.zero;
-                                return ProgressBar(
-                                  barHeight: 5,
-                                  barCapShape: BarCapShape.round,
-                                  timeLabelPadding: 7,
-                                  baseBarColor: AppColors.progressBarBack,
-                                  progressBarColor: AppColors.appBarText,
-                                  thumbColor: AppColors.appBarText,
-                                  thumbRadius: 10,
-                                  thumbGlowRadius: 0,
-                                  progress: position,
-                                  total: provider.currentMusic!.duration ??
-                                      Duration.zero,
-                                  onSeek: (duration) {
-                                    provider.player.seek(duration);
-                                  },
-                                );
-                              },
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          child: Column(
                             children: [
-                              InkWell(
-                                onTap: () => provider.playPrevious(),
-                                splashColor: Colors.transparent,
-                                child: SvgPicture.asset(
-                                  AppIcon.back,
-                                  height: 30,
+                              Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 8.0,
+                                    horizontal: 15,
+                                  ),
+                                  child: Text(
+                                    provider.currentMusic?.name ?? "hh",
+                                    style: const TextStyle(
+                                      fontSize: 23,
+                                      fontFamily: "Exo",
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
                                 ),
                               ),
-                              IconButton(
-                                icon: Icon(
-                                  provider.isPlaying
-                                      ? AppIcon.cupPause
-                                      : AppIcon.cupPlay,
-                                  size: 40,
-                                  color: AppColors.shade,
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 15),
+                                child: StreamBuilder<Duration>(
+                                  stream: provider.player.positionStream,
+                                  builder: (context, snapshot) {
+                                    final position =
+                                        snapshot.data ?? Duration.zero;
+                                    return ProgressBar(
+                                      barHeight: 5,
+                                      barCapShape: BarCapShape.round,
+                                      timeLabelPadding: 7,
+                                      baseBarColor: AppColors.progressBarBack,
+                                      progressBarColor: AppColors.appBarText,
+                                      thumbColor: AppColors.appBarText,
+                                      thumbRadius: 10,
+                                      thumbGlowRadius: 0,
+                                      progress: position,
+                                      total: provider.currentMusic?.duration ??
+                                          Duration.zero,
+                                      onSeek: (duration) {
+                                        provider.player.seek(duration);
+                                      },
+                                    );
+                                  },
                                 ),
-                                onPressed: () {
-                                  provider.pausePlay();
-                                },
                               ),
-                              InkWell(
-                                onTap: () => provider.playNext(),
-                                splashColor: Colors.transparent,
-                                child: SvgPicture.asset(
-                                  AppIcon.next,
-                                  height: 30,
-                                ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  InkWell(
+                                    onTap: () => provider.playPrevious(),
+                                    splashColor: Colors.transparent,
+                                    child: SvgPicture.asset(
+                                      AppIcon.back,
+                                      height: 30,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(
+                                      provider.isPlaying
+                                          ? AppIcon.cupPause
+                                          : AppIcon.cupPlay,
+                                      size: 40,
+                                      color: AppColors.shade,
+                                    ),
+                                    onPressed: () {
+                                      provider.pausePlay();
+                                    },
+                                  ),
+                                  InkWell(
+                                    onTap: () => provider.playNext(),
+                                    splashColor: Colors.transparent,
+                                    child: SvgPicture.asset(
+                                      AppIcon.next,
+                                      height: 30,
+                                    ),
+                                  ),
+                                ],
                               ),
+                              const SizedBox(height: 10),
                             ],
                           ),
-                          const SizedBox(height: 10),
-                        ],
-                      ),
-                    ),
+                        )
+                      : SizedBox(),
                 ],
               ),
             );

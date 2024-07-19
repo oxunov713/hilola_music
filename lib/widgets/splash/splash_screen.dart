@@ -14,34 +14,52 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  late Future<void> _initData;
+
   @override
   void initState() {
     super.initState();
-    _navigateToHome();
+    _initData = _loadData();
   }
 
-  Future<void> _navigateToHome() async {
-    final providerMusic = Provider.of<ProviderMusic>(context, listen: false);
-    await providerMusic.preloadDurations();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const HomeScreen()),
-    );
+  Future<void> _loadData() async {
+    final providerMusic = context.read<ProviderMusic>();
+    await providerMusic.getDataIsLoaded();
+
+    if (!providerMusic.isLoaded) {
+      await providerMusic.preloadDurations();
+      providerMusic.saveDataIsLoaded();
+    } else {
+      await Future.delayed(const Duration(seconds: 5));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder<void>(
+      future: _initData,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => const HomeScreen()),
+            );
+          });
+          return _buildSplashScreenContent();
+        } else {
+          return _buildSplashScreenContent(); // Optionally show a loading indicator
+        }
+      },
+    );
+  }
+
+  Widget _buildSplashScreenContent() {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage(AppIcon.avatar),
             fit: BoxFit.cover,
-          ),
-          gradient: LinearGradient(
-            colors: [AppColors.blue, AppColors.blueAcc],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
           ),
         ),
         child: const Center(
@@ -56,6 +74,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   color: AppColors.white,
                 ),
               ),
+              LinearProgressIndicator(),
             ],
           ),
         ),
