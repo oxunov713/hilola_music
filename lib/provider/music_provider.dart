@@ -195,7 +195,13 @@ class ProviderMusic extends ChangeNotifier {
 
   Future<void> playNext() async {
     try {
-      await _player.seekToNext();
+      if (_currentIndex >= _musicDatabase.length - 1) {
+        _currentIndex = 0;
+      } else {
+        _currentIndex++;
+      }
+      await _player.seek(Duration.zero, index: _currentIndex);
+      await _player.play();
       await _savePreferences();
     } catch (e) {
       print('Error playing next music: $e');
@@ -204,7 +210,13 @@ class ProviderMusic extends ChangeNotifier {
 
   Future<void> playPrevious() async {
     try {
-      await _player.seekToPrevious();
+      if (_currentIndex <= 0) {
+        _currentIndex = _musicDatabase.length - 1;
+      } else {
+        _currentIndex--;
+      }
+      await _player.seek(Duration.zero, index: _currentIndex);
+      await _player.play();
       await _savePreferences();
     } catch (e) {
       print('Error playing previous music: $e');

@@ -15,3 +15,5 @@ void main() async {
     ),
   );
 }
+//todo ShP ga provider yasash yoki bloc ga o'tkazish
+//todo iloji bo'lsa notigficatiom bn lockgaplayer qo'shish

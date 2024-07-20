@@ -30,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
       await providerMusic.preloadDurations();
       providerMusic.saveDataIsLoaded();
     } else {
-      await Future.delayed(const Duration(seconds: 5));
+      await Future.delayed(const Duration(milliseconds: 3600));
     }
   }
 
@@ -62,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen> {
             fit: BoxFit.cover,
           ),
         ),
-        child: const Center(
+        child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -74,7 +74,12 @@ class _SplashScreenState extends State<SplashScreen> {
                   color: AppColors.white,
                 ),
               ),
-              LinearProgressIndicator(),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+                child: LinearProgressIndicator(
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+              ),
             ],
           ),
         ),
